@@ -2,6 +2,7 @@
 # https://datacrystal.romhacking.net/wiki/Zelda_II:_The_Adventure_of_Link:ROM_map
 import strutils
 import romloader
+import nasc.engine
 
 proc main() =
     var rom: ZeldaIIRom
@@ -21,7 +22,6 @@ proc main() =
                 mask = mask shr 1
                 y = y shl 1
                 newSprite[(derp*4)+(i*8)+b] = (char)(x or y)
-                #echo (derp*4)+(i*8)+b
         derp += 16
     derp = 0
     var dd = 0
@@ -44,35 +44,12 @@ proc main() =
             echo str
             str = ""
         dd += 1
-        #[for x in 0..7:
-            var str = ""
-            for y in 0..7:
-                if newSprite[derp + (x*8) + y] == (char)1:
-                    str &= "██"
-                elif newSprite[derp + (x*8)+y] == (char)2:
-                    str &= "▒▒"
-                elif newSprite[ derp + (x*8)+y] == (char)3:
-                    str &= "░░"
-                else:
-                    str &= "  "
-                    #str &= (int)newSprite[(x+1)*y]
-            echo str
-        ]#
-        
-    #[var walkingSprite1 = rom.getSprite(linkWalkingSprite1)
-    echo "walkingSprite1"
-    for i in walkingSprite1:
-        echo toHex(i) & " = " & toBin((BiggestInt)i, 8)
-
-    var walkingSprite2 = rom.getSprite(linkWalkingSprite2)
-    echo "walkingSprite2"
-    for i in walkingSprite2:
-        echo toHex(i) & " = " & toBin((BiggestInt)i, 8)
-
-    var walkingSprite3 = rom.getSprite(linkWalkingSprite3)
-    echo "walkingSprite3"
-    for i in walkingSprite3:
-        echo toHex(i) & " = " & toBin((BiggestInt)i, 8)]#
+    
+    var engine: NascEngine
+    if not engine.init:
+        echo "Unable to init nasc engine, quitting"
+        quit()
+    engine.loop
 
 when isMainModule:
     main()
